@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Prácticas | Trazabilidad</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Menú principal">
+      <div>
+        <p class="brand">Sistema de Prácticas</p>
+        <nav class="main-nav">
+          <a href="#inicio">Inicio</a>
+          <a class="active" href="#expediente" aria-current="page">Mi expediente</a>
+          <a href="#notificaciones">Notificaciones</a>
+          <a href="#documentos">Documentos</a>
+        </nav>
+      </div>
+      <button class="logout-button" type="button">Cerrar sesión</button>
+    </aside>
+
+    <main class="main-content" id="expediente">
+      <header class="page-header">
+        <h1>Seguimiento de mi expediente</h1>
+        <p>Consulta el estado actual de tu trámite de prácticas.</p>
+      </header>
+
+      <section class="card" aria-labelledby="expediente-title">
+        <h2 id="expediente-title">Información del expediente</h2>
+        <div class="expediente-grid">
+          <div>
+            <p><strong>Expediente:</strong> <span id="expediente-code"></span></p>
+            <p><strong>Programa:</strong> <span id="programa"></span></p>
+          </div>
+          <div>
+            <p><strong>Fecha de entrega:</strong> <span id="fecha-entrega"></span></p>
+            <p class="status-line"><strong>Estado actual:</strong>
+              <span id="estado-badge" class="status-badge status-observado"></span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card trace-card" aria-labelledby="trace-title">
+        <h2 id="trace-title">Trazabilidad del trámite</h2>
+        <ol class="stepper" id="stepper" aria-label="Etapas del trámite"></ol>
+        <div class="step-detail" id="step-detail" aria-live="polite"></div>
+      </section>
+
+      <section class="alert-card" id="observacion-alert" aria-labelledby="alert-title">
+        <div class="alert-copy">
+          <h2 id="alert-title">Tu expediente tiene observaciones</h2>
+          <p>Debes corregir los documentos observados antes de que finalice el plazo.</p>
+          <p class="deadline">Plazo máximo para subsanar: <strong id="fecha-limite"></strong></p>
+          <div class="alert-actions">
+            <button class="button button-outline" id="open-observations" type="button">Ver observaciones</button>
+            <button class="button button-primary" id="open-submission" type="button">Subsanar ahora</button>
+          </div>
+        </div>
+        <div class="countdown-card" aria-live="polite">
+          <strong id="remaining-days">0 días hábiles</strong>
+          <span>restantes para subsanar</span>
+        </div>
+      </section>
+
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="observations-modal" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="observations-modal-title">
+      <button class="modal-close" type="button" data-close-modal="observations-modal" aria-label="Cerrar">×</button>
+      <h2 id="observations-modal-title">Observaciones recibidas</h2>
+      <p class="modal-subtitle">Corrige los siguientes puntos antes del plazo indicado.</p>
+      <ol class="observations-list" id="observations-list"></ol>
+      <div class="modal-footer">
+        <button class="button button-outline" type="button" data-close-modal="observations-modal">Cerrar</button>
+        <button class="button button-primary" id="go-to-submission" type="button">Subsanar ahora</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="submission-modal" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="submission-modal-title">
+      <button class="modal-close" type="button" data-close-modal="submission-modal" aria-label="Cerrar">×</button>
+      <h2 id="submission-modal-title">Subsanar expediente</h2>
+      <p class="modal-subtitle">Adjunta el documento corregido en formato PDF.</p>
+
+      <form id="submission-form" novalidate>
+        <div class="form-group">
+          <label for="corrected-file">Documento corregido</label>
+          <input id="corrected-file" type="file" accept="application/pdf,.pdf">
+          <small>Solo PDF. Tamaño máximo: 5 MB.</small>
+          <p class="field-error" id="file-error" role="alert"></p>
+        </div>
+
+        <div class="form-group">
+          <label for="student-comment">Comentario</label>
+          <textarea id="student-comment" rows="4" maxlength="300" placeholder="Describe brevemente las correcciones realizadas."></textarea>
+          <div class="character-count"><span id="comment-count">0</span>/300</div>
+          <p class="field-error" id="comment-error" role="alert"></p>
+        </div>
+
+        <label class="confirmation-row">
+          <input id="confirmation" type="checkbox">
+          Confirmo que revisé y corregí las observaciones.
+        </label>
+        <p class="field-error" id="confirmation-error" role="alert"></p>
+
+        <div class="modal-footer">
+          <button class="button button-outline" type="button" data-close-modal="submission-modal">Cancelar</button>
+          <button class="button button-primary" id="submit-button" type="submit">
+            <span class="button-label">Enviar subsanación</span>
+            <span class="spinner" aria-hidden="true"></span>
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <script src="js/mock-data.js"></script>
+  <script src="js/business-rules.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
